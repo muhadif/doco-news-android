@@ -32,7 +32,6 @@ public class MainPresenter implements MainContract.Presenter {
         responCall.enqueue(new Callback<NewsRespon>() {
             @Override
             public void onResponse(Call<NewsRespon> call, Response<NewsRespon> response) {
-
                 if(response.body() == null) {
                     Toast.makeText(context, "Cannot load more page", Toast.LENGTH_SHORT).show();
                 } else {

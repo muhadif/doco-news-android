@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (!recyclerView.canScrollVertically(1)){
+                if (!recyclerView.canScrollVertically(.)){
 
                     if(!getLoading()) {
                         Toast.makeText(MainActivity.this, "Load More", Toast.LENGTH_SHORT).show();

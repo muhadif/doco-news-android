@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.docotel.muhadif.first.R;
 import com.docotel.muhadif.first.data.model.Article;
 import com.docotel.muhadif.first.ui.detail.DetailArticleActivity;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -76,7 +77,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 @Override
                 public void onClick(View view) {
                     Intent detailArticle = new Intent(context, DetailArticleActivity.class);
-                    detailArticle.putExtra(DetailArticleActivity.EXTRA_ARTICLE, article.getTitle());
+
+                    Gson gson = new Gson();
+                    String acticleJson = gson.toJson(article);
+
+                    detailArticle.putExtra(DetailArticleActivity.EXTRA_ARTICLE, acticleJson);
                     detailArticle.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(detailArticle);
                 }
