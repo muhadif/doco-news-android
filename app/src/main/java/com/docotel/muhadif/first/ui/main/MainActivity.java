@@ -1,6 +1,5 @@
 package com.docotel.muhadif.first.ui.main;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,24 +8,26 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.docotel.muhadif.first.R;
 import com.docotel.muhadif.first.data.model.Article;
+import com.docotel.muhadif.first.util.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View{
+public class MainActivity extends AppCompatActivity implements MainContract{
 
     private MainPresenter presenter;
     private List<Article> articles = new ArrayList<>();
     private RecyclerView recyclerView;
     private ArticleAdapter articleAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private int page;
-    private Boolean isLoading = false;
+    public static int page = 1;
+    private boolean loading = false;
+    private LinearLayoutManager linearLayoutManager;
+    private EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         setCustomActionBar();
 
+        presenter = new MainPresenter(this, getApplicationContext());
+
         init();
+
+        getData(page);
+
+        initListener();
+
+
     }
 
     private void setCustomActionBar() {
@@ -47,77 +56,63 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void init(){
-
-        page = 0;
-
         swipeRefreshLayout = findViewById(R.id.srl_article_list);
-        articleAdapter = new ArticleAdapter(this.getApplicationContext(), articles);
+        articleAdapter = new ArticleAdapter(this, articles);
         recyclerView = findViewById(R.id.rv_articles);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getApplicationContext());
+        linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setAdapter(articleAdapter);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (!recyclerView.canScrollVertically(.)){
+    }
 
-                    if(!getLoading()) {
-                        Toast.makeText(MainActivity.this, "Load More", Toast.LENGTH_SHORT).show();
-                        page++;
-                        presenter.getArticles(page);
-                    }
-                }
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
-
+    private void initListener(){
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                page = 0;
+                page = 1;
                 presenter.getArticles(page);
+                endlessRecyclerViewScrollListener.resetState();
             }
         });
 
-        attachPresenter();
+        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.d("ARTICLES", "Article page = " + page);
+                MainActivity.page++;
+                getData(page);
+            }
+        };
 
-        presenter.getArticles(0);
-
+        recyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
     }
-
-    private void attachPresenter(){
-        presenter = new MainPresenter(this, getApplicationContext());
-    }
-
 
     @Override
-    public void setLoading(Boolean isLoading) {
-        swipeRefreshLayout.setRefreshing(isLoading);
-        this.isLoading = isLoading;
+    public void onLoading() {
+        swipeRefreshLayout.setRefreshing(true);
+        this.loading = true;
+    }
+
+    @Override
+    public void finishLoading() {
+        swipeRefreshLayout.setRefreshing(false);
+        this.loading = false;
     }
 
     @Override
     public void loadData(List<Article> articles) {
-        if(page == 0) {
+        if(page == 1) {
             this.articles.clear();
         }
-
         this.articles.addAll(articles);
+        Log.d("ARTICLES", "Article Count = " + this.articles.size());
         articleAdapter.notifyDataSetChanged();
-        Log.d("Article", "Size news = " + this.articles.size());
+
+
     }
 
-    private Boolean getLoading() {
-        if (this.isLoading) {
-            Toast.makeText(MainActivity.this, "Please wait", Toast.LENGTH_SHORT).show();
-
-        }
-        return this.isLoading;
+    private void getData(int page){
+        presenter.getArticles(page);
     }
 }

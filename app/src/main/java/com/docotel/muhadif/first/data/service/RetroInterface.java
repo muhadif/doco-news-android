@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 public interface RetroInterface {
     public static final String API_KEY = BuildConfig.API_KEY;
 
-    @GET("top-headlines?country=id&apiKey=" + API_KEY + "&pageSize=10" )
+    @GET("top-headlines?country=us&apiKey=" + API_KEY + "&pageSize=10" )
     public Call<NewsRespon> getArticles(@Query("page") int page);
 
 

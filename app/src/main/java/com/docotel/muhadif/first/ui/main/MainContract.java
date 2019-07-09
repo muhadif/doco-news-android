@@ -6,14 +6,10 @@ import java.util.List;
 
 public interface MainContract {
 
-    interface View {
-        void setLoading(Boolean isLoading);
+        void onLoading();
+
+        void finishLoading();
 
         void loadData(List<Article> articles);
-    }
-
-    interface Presenter{
-        void getArticles(Integer page);
-    }
 
 }

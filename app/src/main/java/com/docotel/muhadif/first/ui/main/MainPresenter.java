@@ -14,19 +14,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainPresenter implements MainContract.Presenter {
+public class MainPresenter  {
 
-    MainContract.View view;
+    MainContract view;
     Context context;
 
-    public MainPresenter(MainContract.View view, Context context) {
+    public MainPresenter(MainContract view, Context context) {
         this.view = view;
         this.context = context;
     }
 
-    @Override
     public void getArticles(Integer page) {
-        view.setLoading(true);
+        view.onLoading();
         Call<NewsRespon> responCall = RetroClient.getService().getArticles(page);
 
         responCall.enqueue(new Callback<NewsRespon>() {
@@ -36,14 +35,15 @@ public class MainPresenter implements MainContract.Presenter {
                     Toast.makeText(context, "Cannot load more page", Toast.LENGTH_SHORT).show();
                 } else {
                     view.loadData(response.body().getArticles());
+                    Log.d("ARTICLESPRESETNTER", "Article page = " + response.body().getArticles().size());
                 }
-                view.setLoading(false);
+                view.finishLoading();
             }
 
             @Override
             public void onFailure(Call<NewsRespon> call, Throwable t) {
                 Toast.makeText(context, "Load Failed", Toast.LENGTH_SHORT).show();
-                view.setLoading(false);
+                view.finishLoading();
             }
         });
     }
