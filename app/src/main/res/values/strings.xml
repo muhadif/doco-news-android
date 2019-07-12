@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Doco News</string>
+    <string name="title">title</string>
+    <string name="description">description</string>
+    <string name="author">Author</string>
+    <string name="date">Date</string>
+    <string name="berita_terbaru">Berita Terbaru</string>
+    <string name="doconews">Doconews</string>
+    <string name="masukan_kata_kunci">Masukan kata kunci</string>
+    <string name="no_exiting_news">Berita yang anda cari tidak ada.</string>
 </resources>

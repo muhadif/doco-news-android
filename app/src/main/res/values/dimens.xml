@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="heading_1">28sp</dimen>
+    <dimen name="subtitle_1">12sp</dimen>
+    <dimen name="heading_2">20sp</dimen>
+    <dimen name="heading_3">14sp</dimen>
+    <dimen name="subtitle_2">10sp</dimen>
+    <dimen name="paragraf">12dp</dimen>
+</resources>

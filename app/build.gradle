@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
     defaultConfig {
-        applicationId "com.docotel.muhadif.first"
+        applicationId "com.docotel.muhadif.second"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -18,10 +18,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+
 }
 
 dependencies {
